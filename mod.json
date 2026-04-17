@@ -1,0 +1,10 @@
+{
+  "displayName": "Looming Abyss",
+  "name": "looming-abyss",
+  "author": "RovarX",
+  "main": "loomingabyss.LoomingAbyss",
+  "description": "",
+  "version": 0.1,
+  "minGameVersion": 150,
+  "java": true
+}

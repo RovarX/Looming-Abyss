@@ -9,7 +9,7 @@ class WindowManager(val windowLayer: WidgetGroup) {
     val floatingWindows = Seq<FlowDialog>()
 
     val shownWindows: Seq<FlowDialog>
-        get() = floatingWindows.select { it.data.isShown }
+        get() = floatingWindows.select { it.isShownInDialog }
 
     var activeWindow: FlowDialog? = null
 
@@ -26,7 +26,9 @@ class WindowManager(val windowLayer: WidgetGroup) {
             windowLayer.addChild(dialog)
         }
 
-        dialog.pack()
+        if (dialog.shouldPack) {
+            dialog.pack()
+        }
 
         if (center) {
             centerWindow(dialog)
@@ -80,4 +82,3 @@ class WindowManager(val windowLayer: WidgetGroup) {
 
 
 }
-

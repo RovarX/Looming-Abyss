@@ -19,6 +19,7 @@ import mindustry.input.Binding
 import ui.customize.CustomizeDialog
 import ui.customize.FlowDialog
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -26,12 +27,6 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
 
 
     var tiles: LATiles? = null
-
-    /**宽  */
-    var totalWidth: Float = 0f
-
-    /**高  */
-    var totalHeight: Float = 0f
 
     /**边框粗细  */
     var edgeThickness: Float = 5f
@@ -57,11 +52,9 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
 
     private var hoverInside = false
 
-    /**开发者模式*/
-    val editMode = false
-
     init{
 
+        shouldPack = false
         this.touchable = Touchable.enabled
         resize()
         initArea()
@@ -75,20 +68,6 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
             override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Element?) {
                 Core.scene.setScrollFocus(null)
                 hoverInside = false
-            }
-
-            override fun keyDown(event: InputEvent?, keycode: KeyCode?): Boolean {
-                if (keycode == KeyCode.escape) {
-                }
-                return true
-            }
-
-            override fun keyUp(event: InputEvent?, keycode: KeyCode?): Boolean {
-                return true
-            }
-
-            override fun keyTyped(event: InputEvent?, character: Char): Boolean {
-                return true
             }
 
             override fun mouseMoved(event: InputEvent?, x: Float, y: Float): Boolean {
@@ -119,12 +98,14 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
     fun drawEdge() {
         Draw.color(Color.orange)
         Lines.stroke(edgeThickness)
-        Lines.rect(x, y, width, height)
+        val inset = edgeThickness / 2f
+        Lines.rect(x + inset, y + inset, width - edgeThickness, height - edgeThickness)
         Draw.reset()
     }
 
     fun setViewOf(tiles: LATiles){
         this.tiles = tiles
+        resize()
         refresh()
     }
 
@@ -153,14 +134,8 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
 
     /**自动设置区域大小  */
     fun resize() {
-        val edgeLength = min(0.75f * Core.scene.getHeight(), 0.66f * Core.scene.getWidth())
-        this.setArea(edgeLength, edgeLength)
-    }
-
-    /**设置区域大小  */
-    fun setArea(width: Float, height: Float) {
-        this.totalWidth = width
-        this.totalHeight = height
+        val edgeLength = min(0.75f * Core.scene.height, 0.66f * Core.scene.width)
+        this.setSize(edgeLength, edgeLength)
     }
 
     /**初始化位置  */
@@ -174,8 +149,8 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
         val tiles = this.tiles ?: return
         val tileSize = 32f * zoom
         val halfSize = tileSize / 2f
-        this.originalX = (this.totalWidth - tiles.width * tileSize) / 2f + halfSize
-        this.originalY = (this.totalHeight - tiles.height * tileSize) / 2f + halfSize
+        this.originalX = (this.width - tiles.width * tileSize) / 2f + halfSize
+        this.originalY = (this.height - tiles.height * tileSize) / 2f + halfSize
     }
 
     fun centralize() {
@@ -188,9 +163,9 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
     }
 
     fun clampOffset() {
-        val minX = -1f * (this.totalWidth - this.originalX) + 10f
+        val minX = -1f * (this.width - this.originalX) + 10f
         val maxX = -1f * minX
-        val minY = -1f * (this.totalHeight - this.originalY) + 10f
+        val minY = -1f * (this.height - this.originalY) + 10f
         val maxY = -1f * minY
         this.offsetX = Mathf.clamp(this.offsetX, minX, maxX)
         this.offsetY = Mathf.clamp(this.offsetY, minY, maxY)
@@ -199,7 +174,7 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
 
     /**判断点是否在区域内  */
     fun isInside(x: Float, y: Float): Boolean {
-        return x >= this.x && x <= this.x + this.totalWidth && y >= this.y && y <= this.y + this.totalHeight
+        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
     }
 
 

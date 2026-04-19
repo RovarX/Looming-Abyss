@@ -7,6 +7,8 @@ import arc.graphics.g2d.TextureRegion
 object CT {
     val modName = "looming-abyss"
 
+    val developeMode = true
+
     /**direction array*/
     val dir = arrayOf(
         intArrayOf(0,1),

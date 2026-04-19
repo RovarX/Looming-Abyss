@@ -1,5 +1,6 @@
 package block.customizableCrafter.tile
 
+import block.LABlocks
 import block.customizableCrafter.assist.ElementState
 
 class LATile(
@@ -13,7 +14,9 @@ class LATile(
     var isEdge = false
     var isShown = true
 
-    fun drawTile(x:Float,y:Float,zoom:Float){
+    var floor = LABlocks.crafterFloor
 
+    fun drawTile(x:Float,y:Float,zoom:Float){
+        floor.drawFloor(x,y,zoom)
     }
 }

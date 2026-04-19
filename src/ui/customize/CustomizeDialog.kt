@@ -37,6 +37,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
             setup()
             windowManager.openWindow(testWindow, center = true)
             windowManager.openWindow(createTestWindow(), center = false)
+            windowManager.openWindow(view, center = true)
         }
 
         hidden {

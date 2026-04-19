@@ -5,13 +5,20 @@ import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
 import arc.scene.ui.Dialog
-import arc.scene.ui.Dialog.DialogStyle
 
 open class FlowDialog(title: String = "") : Dialog(title) {
     private var behaviorInstalled = false
     private var movedCallback: ((Dialog) -> Unit)? = null
 
-    val data = Data()
+    var isShownInDialog: Boolean = true
+
+    /**don't care*/
+    var rightPosX = 0f
+    /**don't care*/
+    var rightPosY = 0f
+
+    /**whether it should be packed*/
+    var shouldPack = true
 
     init {
         setFillParent(false)
@@ -49,8 +56,8 @@ open class FlowDialog(title: String = "") : Dialog(title) {
 
                 dragPointer = pointer
 
-                dragOffsetX = event.stageX - this@FlowDialog.data.x
-                dragOffsetY = event.stageY - this@FlowDialog.data.y
+                dragOffsetX = event.stageX - this@FlowDialog.rightPosX
+                dragOffsetY = event.stageY - this@FlowDialog.rightPosY
                 dragging = true
                 onFocus()
                 this@FlowDialog.toFront()
@@ -60,9 +67,9 @@ open class FlowDialog(title: String = "") : Dialog(title) {
             override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) {
                 if (!dragging || pointer != dragPointer) return
 
-                data.x = event.stageX - dragOffsetX
-                data.y = event.stageY - dragOffsetY
-                data.state = State.Moved
+                rightPosX = event.stageX - dragOffsetX
+                rightPosY = event.stageY - dragOffsetY
+
             }
 
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: KeyCode) {
@@ -75,26 +82,11 @@ open class FlowDialog(title: String = "") : Dialog(title) {
 
     override fun act(delta: Float) {
         super.act(delta)
-        setPosition(data.x, data.y)
+        setPosition(rightPosX, rightPosY)
     }
 
     fun setInitialPosition(x: Float, y: Float) {
-        data.x = x
-        data.y = y
-    }
-
-    class Data{
-
-        var x: Float = 0f
-        var y: Float = 0f
-        var width: Float = 0f
-        var height: Float = 0f
-        var state: State = State.Shown
-        var isShown: Boolean = true
-
-    }
-
-    enum class State{
-        Moved, Resized, Closed,Shown
+        rightPosX = x
+        rightPosY = y
     }
 }

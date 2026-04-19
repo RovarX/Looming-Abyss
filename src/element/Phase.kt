@@ -1,8 +1,8 @@
-package element;
+package element
 
-public class Phase {
-    public static int vacuum = -1;
-    public static int solid = 0;
-    public static int liquid = 1;
-    public static int gas = 2;
+object Phase {
+    val vacuum = -1
+    val solid = 0
+    val liquid = 1
+    val gas = 2
 }

@@ -7,7 +7,6 @@ import block.customizableCrafter.tile.LATiles
 import mindustry.gen.Icon
 import mindustry.type.Category
 import mindustry.ui.Styles
-import mindustry.world.Block
 import mindustry.world.blocks.production.GenericCrafter
 import ui.ui
 

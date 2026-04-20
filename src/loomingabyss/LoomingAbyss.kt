@@ -1,6 +1,5 @@
 package loomingabyss
 
-import arc.Core
 import arc.Events
 import arc.func.Cons
 import arc.util.Time
@@ -24,7 +23,7 @@ class LoomingAbyss : Mod() {
                 Time.runTask(10f, Runnable {
                     val dialog = BaseDialog("frog")
                     dialog.cont.add("behold").row()
-                    dialog.cont.image(CT.getRegion("")).pad(20f).row()
+                    dialog.cont.image(CT.getRegion("floor-1")).pad(20f).row()
                     dialog.cont.button("I see", Runnable { dialog.hide() }).size(100f, 50f)
                     dialog.show()
                 })

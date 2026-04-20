@@ -36,6 +36,11 @@ class WindowManager(val windowLayer: WidgetGroup) {
 
     }
 
+    fun openWindow(dialog: FlowDialog, x: Float, y: Float) {
+        dialog.setInitialPosition(x, y)
+        openWindow(dialog, center = false)
+    }
+
     fun closeWindow(dialog: FlowDialog) {
         dialog.remove()
         floatingWindows.remove(dialog)

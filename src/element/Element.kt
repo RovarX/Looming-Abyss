@@ -17,6 +17,8 @@ class Element(
     /**最小允许质量*/
     var minMass: Double = 0.0
 
+    var flowability : Array<Double> = emptyArray()
+
     companion object{
         /**最大形态数*/
         val maxPhases = 3

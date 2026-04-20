@@ -1,7 +1,6 @@
 package element
 
 import arc.graphics.g2d.TextureRegion
-import utility.CT
 
 /**标记作为元素一种相*/
 interface PhaseType {

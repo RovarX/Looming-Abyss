@@ -1,6 +1,5 @@
 package block.customizableCrafter.base
 
-import arc.Core
 import arc.graphics.g2d.Draw
 import arc.graphics.g2d.TextureRegion
 import mindustry.world.blocks.environment.Floor
@@ -12,10 +11,10 @@ class CrafterFloor(name: String) : Floor(name) {
 
     override fun load() {
         super.load()
-        this.floorRegion = Core.atlas.find(this.name)
+        this.floorRegion = CT.getRegion(name)
     }
 
     fun drawFloor(x: Float, y: Float, zoom: Float) {
-        Draw.rect(region, x, y, region.width * zoom, region.height * zoom)
+        Draw.rect(floorRegion, x, y, floorRegion.width * zoom, floorRegion.height * zoom)
     }
 }

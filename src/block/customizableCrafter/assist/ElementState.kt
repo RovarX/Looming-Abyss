@@ -38,6 +38,7 @@ class ElementState {
         mass = es.mass
         heat = es.heat
         temperature = es.temperature
+        phase = es.phase
     }
 
     fun toNull(){

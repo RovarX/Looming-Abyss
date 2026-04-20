@@ -12,14 +12,12 @@ import arc.scene.Element
 import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
-import arc.scene.ui.layout.Table
 import arc.util.Time
 import block.customizableCrafter.tile.LATiles
 import mindustry.input.Binding
 import ui.customize.CustomizeDialog
 import ui.customize.FlowDialog
 import kotlin.math.floor
-import kotlin.math.max
 import kotlin.math.min
 
 

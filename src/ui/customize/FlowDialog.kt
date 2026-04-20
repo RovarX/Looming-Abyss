@@ -12,6 +12,7 @@ open class FlowDialog(title: String = "") : Dialog(title) {
 
     var isShownInDialog: Boolean = true
 
+
     /**don't care*/
     var rightPosX = 0f
     /**don't care*/

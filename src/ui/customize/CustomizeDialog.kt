@@ -3,11 +3,10 @@ package ui.customize
 import arc.scene.event.Touchable
 import arc.scene.ui.Image
 import arc.scene.ui.TextButton
-import arc.scene.ui.layout.Cell
 import arc.scene.ui.layout.Scl
 import arc.scene.ui.layout.WidgetGroup
-import arc.util.Align
 import block.costomizableCrafter.ui.InnerView
+import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.tile.LATiles
 import mindustry.Vars
 import mindustry.core.GameState
@@ -21,6 +20,10 @@ class CustomizeDialog : BaseDialog("@dialog") {
     val windowManager = WindowManager(windowLayer)
     private val testWindow = createTestWindow()
     val view : InnerView
+    val debugPanel = DebugPanel()
+
+    /**the data shared by uis*/
+    val data = ShareData()
 
     val switchButton: FlowButton
     
@@ -35,8 +38,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
 
         shown {
             setup()
-            windowManager.openWindow(testWindow, center = true)
-            windowManager.openWindow(createTestWindow(), center = false)
+            windowManager.openWindow(debugPanel,0.0f,0.0f)
             windowManager.openWindow(view, center = true)
         }
 
@@ -101,5 +103,9 @@ class CustomizeDialog : BaseDialog("@dialog") {
         view.setViewOf(tiles)
         super.show()
 
+    }
+
+    class ShareData{
+        val es = ElementState()
     }
 }

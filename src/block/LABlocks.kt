@@ -6,8 +6,8 @@ import block.customizableCrafter.base.CrafterFloor
 object LABlocks {
 
     lateinit var crafterBase: CrafterBase
-
     lateinit var crafterFloor: CrafterFloor
+    
     fun load(){
         crafterBase = CrafterBase("crafter-base").apply{
             size =3

@@ -8,7 +8,7 @@ import mindustry.gen.Icon
 import mindustry.type.Category
 import mindustry.ui.Styles
 import mindustry.world.blocks.production.GenericCrafter
-import ui.ui
+import ui.uis
 
 class CrafterBase(
     name:String?
@@ -54,7 +54,7 @@ class CrafterBase(
 
         override fun buildConfiguration(table: Table) {
             table.button(Icon.info, Styles.cleari, 40f, Runnable {
-                ui.customize.show(innerTiles)
+                uis.customize.show(innerTiles)
             })
         }
 

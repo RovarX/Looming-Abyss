@@ -13,6 +13,7 @@ import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
 import arc.util.Time
+import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.tile.LATiles
 import mindustry.input.Binding
 import ui.customize.CustomizeDialog
@@ -21,8 +22,7 @@ import kotlin.math.floor
 import kotlin.math.min
 
 
-class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
-
+class InnerView() : FlowDialog("@view"){
 
     var tiles: LATiles? = null
 
@@ -49,6 +49,9 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
     var mousey: Float = 0f
 
     private var hoverInside = false
+
+    /**the es on the mouse*/
+    lateinit var curTileES : ElementState
 
     init{
 
@@ -192,6 +195,8 @@ class InnerView(val dialog: CustomizeDialog) : FlowDialog("@view"){
             this.refreshOrigin()
             this.clampOffset()
         }
+
+
     }
 
     /**根据tiles刷新视图*/

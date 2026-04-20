@@ -19,6 +19,6 @@ object CT {
 
     /**The more convenient way to get a texture region*/
     fun getRegion(s:String): TextureRegion{
-        return Core.atlas.find("$modName-$s")
+        return Core.atlas.find("$modName-$s", s)
     }
 }

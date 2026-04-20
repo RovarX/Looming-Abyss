@@ -5,13 +5,16 @@ import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
 import arc.scene.ui.Dialog
+import ui.uis
 
-open class FlowDialog(title: String = "") : Dialog(title) {
+open class FlowDialog(title : String = "") : Dialog(title) {
     private var behaviorInstalled = false
     private var movedCallback: ((Dialog) -> Unit)? = null
 
     var isShownInDialog: Boolean = true
 
+    /**parent dialog*/
+    val dialog by lazy{uis.customize}
 
     /**don't care*/
     var rightPosX = 0f
@@ -90,4 +93,5 @@ open class FlowDialog(title: String = "") : Dialog(title) {
         rightPosX = x
         rightPosY = y
     }
+
 }

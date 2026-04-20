@@ -8,7 +8,7 @@ import block.customizableCrafter.assist.ElementState
 import element.Elements
 import mindustry.gen.Icon
 import mindustry.ui.Styles
-import ui.ui
+import ui.uis
 
 class DebugPanel() : FlowDialog("@DebugPanel") {
     val elementIdField: TextField
@@ -23,6 +23,11 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
     val es = ElementState()
 
     init{
+        clearChildren()
+
+        add(titleTable)
+        row()
+
         add("Element")
         elementIdField = field("", { _ -> })
             .width(180f)
@@ -57,6 +62,9 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
 
         buttons.add(applyButton)
         buttons.button("@reset",this@DebugPanel::resetValues)
+        add(buttons).growX().colspan(3)
+
+
     }
 
     /**called when inner view want an es*/
@@ -66,7 +74,7 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
         es.heat = heatField.text.trim().toDoubleOrNull()?:-1.0
         es.temperature = temperatureField.text.trim().toDoubleOrNull()?:-1.0
         es.autoFill()
-        ui.customize.data.es.copyFrom(es)
+        uis.customize.data.es.copyFrom(es)
     }
 
     fun resetValues(){

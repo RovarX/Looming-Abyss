@@ -21,6 +21,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
     private val testWindow = createTestWindow()
     val view : InnerView
     val debugPanel = DebugPanel()
+    val tileData = TileData()
 
     /**the data shared by uis*/
     val data = ShareData()
@@ -39,6 +40,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
         shown {
             setup()
             windowManager.openWindow(debugPanel,0.0f,0.0f)
+            windowManager.openWindow(tileData,0.0f,140f)
             windowManager.openWindow(view, center = true)
         }
 
@@ -46,7 +48,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
             windowManager.closeAllWindows()
         }
 
-        view = InnerView(this)
+        view = InnerView()
 
         switchButton = FlowButton(TextButton("@switchState",Styles.clearTogglet).also{
             it.add(Image(Icon.play)).size(Icon.play.imageSize()/Scl.scl(1f))

@@ -13,7 +13,7 @@ class Liquid(
     PhaseType {
 
     override val phaseName: String = name
-    override val drawRegion: TextureRegion = CT.getRegion("$name-drawRegion")
+    override val drawRegion: TextureRegion = CT.getRegion(name +"_region")
 
     init{
         element.phaseTypes[Phase.liquid] = this

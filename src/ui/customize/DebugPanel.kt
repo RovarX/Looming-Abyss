@@ -6,9 +6,9 @@ import arc.scene.ui.TextField
 import arc.scene.ui.layout.Scl
 import block.customizableCrafter.assist.ElementState
 import element.Elements
+import element.Phase
 import mindustry.gen.Icon
 import mindustry.ui.Styles
-import ui.uis
 
 class DebugPanel() : FlowDialog("@DebugPanel") {
     val elementIdField: TextField
@@ -18,7 +18,7 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
     
     val applyButton :TextButton
 
-    var applying = false
+    var applying = true
 
     val es = ElementState()
 
@@ -56,7 +56,7 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
             it.add(Image(Icon.play)).size(Icon.play.imageSize()/Scl.scl(1f))
             it.cells.reverse()
             it.clicked({
-                applying=!applying
+                //applying=!applying
             })
         }
 
@@ -74,7 +74,14 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
         es.heat = heatField.text.trim().toDoubleOrNull()?:-1.0
         es.temperature = temperatureField.text.trim().toDoubleOrNull()?:-1.0
         es.autoFill()
-        uis.customize.data.es.copyFrom(es)
+
+        es.apply{
+            element = Elements.H2O
+            mass  = 1.0
+            heat = 1.0
+            temperature = 1.0
+            phase = Phase.liquid
+        }
     }
 
     fun resetValues(){

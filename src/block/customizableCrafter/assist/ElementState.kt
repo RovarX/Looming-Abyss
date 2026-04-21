@@ -1,5 +1,6 @@
 package block.customizableCrafter.assist
 
+import arc.graphics.g2d.Draw
 import element.Element
 import element.Elements
 import element.Phase
@@ -10,7 +11,7 @@ class ElementState {
     var mass: Double = -1.0
     var heat: Double = -1.0
     var temperature: Double = -1.0
-    var phase = Phase.vacuum
+    var phase = Phase.liquid
 
     /**Base on [element], two of [mass],[heat],[temperature], fill the last one*/
     fun autoFill(){
@@ -46,7 +47,7 @@ class ElementState {
         mass = -1.0
         heat = -1.0
         temperature = -1.0
-        phase = Phase.vacuum
+        phase = Phase.liquid
     }
 
     fun addMass(delta: Double){
@@ -71,5 +72,11 @@ class ElementState {
         else{
             temperature = heat / mass / element.heatCapacity
         }
+    }
+
+    fun drawElement(x:Float,y:Float,zoom:Float){
+        if(element===Elements.vacuum) return
+        val region = element.drawRegion[Phase.liquid]
+        Draw.rect(region,x,y,region.width*zoom,region.height*zoom)
     }
 }

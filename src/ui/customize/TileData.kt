@@ -34,10 +34,11 @@ class TileData : FlowDialog("@TileData") {
         pullFromInnerView()
     }
 
+    //TODO: optimize by only pulling when mouse position changes, or at a reasonable interval.
     private fun pullFromInnerView() {
         val view = dialog.view
         val tiles = view.tiles ?: return
-        val tile = tiles.getTile(view.isMouseIn())
+        val tile = tiles.getTile(view.mouseOnTile)
 
         if (tile != null) {
             lastTileIndex = tile.y * tiles.totalWidth + tile.x

@@ -1,5 +1,8 @@
 package element
 
+import arc.graphics.g2d.TextureRegion
+import utility.CT
+
 class Element(
     /**元素名称*/
     val name:String,
@@ -18,6 +21,8 @@ class Element(
     var minMass: Double = 0.0
 
     var flowability : Array<Double> = emptyArray()
+
+    val drawRegion by lazy {Array<TextureRegion>(maxPhases){i-> CT.getRegion("$name-$i")}}
 
     companion object{
         /**最大形态数*/

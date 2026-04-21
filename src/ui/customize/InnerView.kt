@@ -13,10 +13,8 @@ import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
 import arc.util.Time
-import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.tile.LATiles
 import mindustry.input.Binding
-import ui.customize.CustomizeDialog
 import ui.customize.FlowDialog
 import kotlin.math.floor
 import kotlin.math.min
@@ -48,11 +46,9 @@ class InnerView() : FlowDialog("@view"){
 
     var mousey: Float = 0f
 
-    private var hoverInside = false
-
-    /**the es on the mouse*/
-    lateinit var curTileES : ElementState
-
+    var mouseOnTile = -1
+    var applyOnTile = false
+    
     init{
 
         shouldPack = false
@@ -63,18 +59,11 @@ class InnerView() : FlowDialog("@view"){
         this.addListener(object : InputListener() {
             override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Element?) {
                 Core.scene.setScrollFocus(this@InnerView)
-                hoverInside=true
-            }
-
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Element?) {
-                Core.scene.setScrollFocus(null)
-                hoverInside = false
             }
 
             override fun mouseMoved(event: InputEvent?, x: Float, y: Float): Boolean {
                 this@InnerView.mousex = x
                 this@InnerView.mousey = y
-                hoverInside = true
                 return true
             }
 
@@ -82,7 +71,12 @@ class InnerView() : FlowDialog("@view"){
                 this@InnerView.mousex = x
                 this@InnerView.mousey = y
 
+                Core.scene.setScrollFocus(this@InnerView)
 
+                val debugPanel = this@InnerView.dialog.debugPanel
+                if (debugPanel.applying) {
+                    applyOnTile = true
+                }
 
                 return true
             }
@@ -173,15 +167,14 @@ class InnerView() : FlowDialog("@view"){
     }
 
 
-    /**判断点是否在区域内  */
-    fun isInside(x: Float, y: Float): Boolean {
-        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
-    }
 
 
     override fun act(delta: Float) {
         super.act(delta)
-        if (Core.scene.getKeyboardFocus() == null || !Core.scene.hasField() && !Core.input.keyDown(KeyCode.controlLeft)) {
+
+        getMouseIn()
+
+        if (Core.scene.keyboardFocus == null || !Core.scene.hasField() && !Core.input.keyDown(KeyCode.controlLeft)) {
             val ax = Core.input.axis(Binding.moveX)
             val ay = Core.input.axis(Binding.moveY)
             this.offsetX += ax * 15.0f * Time.delta / this.zoom
@@ -195,7 +188,18 @@ class InnerView() : FlowDialog("@view"){
             this.refreshOrigin()
             this.clampOffset()
         }
-
+        
+        if(applyOnTile){
+            val debugPanel = this.dialog.debugPanel
+            debugPanel.applyInputValues()
+            val tile = this.tiles?.getTile(this.mouseOnTile)
+            if(tile!=null){
+                tile.es.copyFrom(debugPanel.es)
+            }
+            // Keep wheel zoom available right after applying onto a tile.
+            Core.scene.setScrollFocus(this)
+            applyOnTile = false
+        }
 
     }
 
@@ -205,9 +209,12 @@ class InnerView() : FlowDialog("@view"){
         centralize()
     }
 
-    /**返回鼠标的位置对应的tile的index*/
-    fun isMouseIn(): Int{
-        val tiles = this.tiles ?: return -1
+    /**更新mouseOnTile*/
+    fun getMouseIn(){
+
+        mouseOnTile =-1
+        
+        val tiles = this.tiles ?: return
 
         // touchDown / mouseMoved give local coordinates in this table.
         val localX = this.mousex
@@ -215,11 +222,11 @@ class InnerView() : FlowDialog("@view"){
 
         // Ignore border frame area.
         if (localX < edgeThickness || localX > width - edgeThickness || localY < edgeThickness || localY > height - edgeThickness) {
-            return -1
+            return
         }
 
         val tileSize = 32f * zoom
-        if (tileSize <= 0f) return -1
+        if (tileSize <= 0f) return
 
         val gridLeft = originalX + offsetX - tileSize / 2f
         val gridBottom = originalY + offsetY - tileSize / 2f
@@ -231,9 +238,9 @@ class InnerView() : FlowDialog("@view"){
         val heightWithBorder = tiles.height + 2
 
         if (tx !in 0 until widthWithBorder || ty !in 0 until heightWithBorder) {
-            return -1
+            return
         }
 
-        return ty * widthWithBorder + tx
+        mouseOnTile = ty * widthWithBorder + tx
     }
 }

@@ -22,6 +22,7 @@ class LATile(
 
     fun drawTile(x:Float,y:Float,zoom:Float){
         floor.drawFloor(x,y,zoom)
+        es.drawElement(x,y,zoom)
     }
 
     fun canFlow():Boolean{

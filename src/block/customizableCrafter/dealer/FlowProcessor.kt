@@ -1,6 +1,7 @@
 package block.customizableCrafter.dealer
 
 import block.customizableCrafter.tile.LATiles
+import element.Elements
 import element.Phase
 import kotlin.math.abs
 import kotlin.math.min
@@ -10,6 +11,9 @@ class FlowProcessor:Processor() {
     override fun process(tiles: LATiles) {
         super.process(tiles)
         cleanFlowData()
+        checkFlow()
+        countFlow()
+        updateResult()
     }
 
     fun cleanFlowData(){
@@ -21,23 +25,27 @@ class FlowProcessor:Processor() {
     fun checkFlow(){
 
         for(tile in tiles.array){
-            if(!tile.canFlow()||tile.acted){
+            if(tile.es.element=== Elements.vacuum||tile.acted){
                 continue
             }
             for(idx in 0..3){
-                val nearTile=(tiles.getTile(tile, idx) ?: continue).also{
-                    if(!it.canFlow()||!(it.es.phase== Phase.vacuum&&it.es.element===tile.es.element)){
+                (tiles.getTile(tile, idx) ?: continue).also{
+                    if((it.es.element !== tile.es.element && it.es.element !== Elements.vacuum)  || it.isEdge){
                         continue
                     }
-                }.apply{
-                    this.flowData.flowedCount++
-                    this.flowData.flowedFrom[(idx+2)%4]=true
-                    this.flowData.isFlowed=true
+                }.flowData.apply{
+                    flowedCount++
+                    flowedFrom[(idx+2)%4]=true
+                    isFlowed=true
                 }
-                tile.acted=true
-                tile.flowData.flowingCount++
-                tile.flowData.flowingTo[idx]=true
-                tile.flowData.isFlowing=true
+
+                tile.apply{
+                    acted=true
+                }.flowData.apply{
+                    flowingCount++
+                    flowingTo[idx]=true
+                    isFlowing=true
+                }
             }
         }
 
@@ -82,6 +90,9 @@ class FlowProcessor:Processor() {
                 flowedFrom = booleanArrayOf(false, false, false, false)
                 flowedFrom[d] = true
             }
+
+            tile.es.element = fromTiles[d]!!.es.element
+
             fromTiles[d]!!.flowData.apply{
                 isFlowing=true
                 flowingTo[(d + 2) % 4] = true
@@ -105,18 +116,29 @@ class FlowProcessor:Processor() {
                 massDeltaSum+=abs(nearTiles[idx]!!.es.mass-tile.es.mass)
             }
 
+            if(massDeltaSum <= 0.0 || tile.es.mass <= 0.0){
+                continue
+            }
+
             for(idx in 0..3){
                 if(!tile.flowData.flowingTo[idx]){
                     continue
                 }
                 val md=tile.es.let{it.mass/massDeltaSum*abs(nearTiles[idx]!!.es.mass  -it.mass)*it.element.flowability[it.phase]}
+                if(md <= 0.0 || md.isNaN() || md.isInfinite()){
+                    continue
+                }
+                val hd = tile.es.heat*md/tile.es.mass
+                if(hd.isNaN() || hd.isInfinite()){
+                    continue
+                }
                 nearTiles[idx]!!.flowData.apply {
                     massDelta+= md
-                    heatDelta+= tile.es.heat*md/tile.es.mass
+                    heatDelta+= hd
                 }
                 tile.flowData.apply{
                     massDelta-= md
-                    heatDelta-= tile.es.heat*md/tile.es.mass
+                    heatDelta-= hd
                 }
             }
         }
@@ -124,7 +146,7 @@ class FlowProcessor:Processor() {
 
     fun updateResult(){
         for(tile in tiles.array){
-            if(!(tile.flowData.isFlowing&&tile.flowData.isFlowed)){
+            if(!(tile.flowData.isFlowing || tile.flowData.isFlowed)){
                 continue
             }
             tile.es.addMH(tile.flowData.massDelta, tile.flowData.heatDelta)

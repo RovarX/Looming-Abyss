@@ -28,6 +28,8 @@ class FlowData {
         isFlowed = false
         flowedFrom = BooleanArray(4)
         flowedCount = 0
+        massDelta = 0.0
+        heatDelta = 0.0
     }
 
     fun reset(){

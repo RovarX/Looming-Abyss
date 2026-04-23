@@ -49,7 +49,6 @@ class CrafterBase(
                 innerUpdateCounter -= 60f
                 innerTiles.update()
             }
-
         }
 
         override fun buildConfiguration(table: Table) {

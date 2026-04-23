@@ -1,8 +1,8 @@
 package element
 
 object Phase {
-    val vacuum = -1
-    val solid = 0
-    val liquid = 1
-    val gas = 2
+    val vacuum = 0
+    val solid = 1
+    val liquid = 2
+    val gas = 3
 }

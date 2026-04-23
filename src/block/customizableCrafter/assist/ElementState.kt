@@ -11,7 +11,7 @@ class ElementState {
     var mass: Double = -1.0
     var heat: Double = -1.0
     var temperature: Double = -1.0
-    var phase = Phase.liquid
+    var phase = Phase.vacuum
 
     /**Base on [element], two of [mass],[heat],[temperature], fill the last one*/
     fun autoFill(){
@@ -47,7 +47,7 @@ class ElementState {
         mass = -1.0
         heat = -1.0
         temperature = -1.0
-        phase = Phase.liquid
+        phase = Phase.vacuum
     }
 
     fun addMass(delta: Double){

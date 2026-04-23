@@ -1,6 +1,8 @@
 package ui.customize
 
+import arc.Core
 import arc.input.KeyCode
+import arc.scene.Element
 import arc.scene.event.InputEvent
 import arc.scene.event.InputListener
 import arc.scene.event.Touchable
@@ -48,6 +50,12 @@ open class FlowDialog(title : String = "") : Dialog(title) {
         if (behaviorInstalled) return
         behaviorInstalled = true
         movedCallback = onMoved
+
+        addListener(object : InputListener() {
+            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Element?) {
+                Core.scene.setScrollFocus(this@FlowDialog)
+            }
+        })
 
         titleTable.addListener(object : InputListener() {
             var dragPointer = -1

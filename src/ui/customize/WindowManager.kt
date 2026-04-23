@@ -17,7 +17,7 @@ class WindowManager(val windowLayer: WidgetGroup) {
         return if (floatingWindows.isEmpty) null else floatingWindows.maxBy { it.zIndex }
     }
 
-    fun openWindow(dialog: FlowDialog, center: Boolean = true) {
+    fun openWindow(dialog: FlowDialog) {
         if (!floatingWindows.contains(dialog)) {
             floatingWindows.add(dialog)
         }
@@ -30,15 +30,6 @@ class WindowManager(val windowLayer: WidgetGroup) {
             dialog.pack()
         }
 
-        if (center) {
-            centerWindow(dialog)
-        }
-
-    }
-
-    fun openWindow(dialog: FlowDialog, x: Float, y: Float) {
-        dialog.setInitialPosition(x, y)
-        openWindow(dialog, center = false)
     }
 
     fun closeWindow(dialog: FlowDialog) {

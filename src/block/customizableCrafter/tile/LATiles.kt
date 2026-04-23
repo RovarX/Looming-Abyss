@@ -1,6 +1,7 @@
 package block.customizableCrafter.tile
 
 import block.customizableCrafter.assist.ElementArea
+import block.customizableCrafter.dealer.Processors
 import utility.CT
 
 class LATiles(
@@ -14,7 +15,7 @@ class LATiles(
     
     val array = Array<LATile>(totalWidth*totalHeight){ i->
         val x = i%totalWidth
-        val y = i/totalHeight
+        val y = i/totalWidth
         LATile(x,y,this).also{
             if(x==0||y==0||x==totalWidth-1||y==totalHeight-1){
                 it.isEdge=true
@@ -33,7 +34,8 @@ class LATiles(
     var curAreaID = 0
 
     fun update(){
-
+        array.forEach { it.acted = false }
+        Processors.normUpdate(this)
     }
 
     fun getTile(tile:LATile,d:Int):LATile?{

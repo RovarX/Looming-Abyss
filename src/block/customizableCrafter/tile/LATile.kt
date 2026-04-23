@@ -3,6 +3,7 @@ package block.customizableCrafter.tile
 import block.LABlocks
 import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.assist.FlowData
+import element.Elements
 
 class LATile(
     val x:Int,
@@ -25,7 +26,12 @@ class LATile(
         es.drawElement(x,y,zoom)
     }
 
-    fun canFlow():Boolean{
-        return !isEdge && !acted
+    /**是否能流入液体*/
+    fun canFlowIn():Boolean{
+        return !isEdge
+    }
+
+    fun canFlowOut():Boolean{
+        return !isEdge && es.element !== Elements.vacuum
     }
 }

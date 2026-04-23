@@ -15,7 +15,7 @@ object Elements {
         H2O = Element("H2O",1).apply {
             heatCapacity = 4.18
             minMass = 0.001
-            flowability = arrayOf(0.0,0.8,1.0)
+            flowability = arrayOf(0.0,0.0,0.8,1.0)
         }
 
 

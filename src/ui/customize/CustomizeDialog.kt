@@ -19,14 +19,23 @@ class CustomizeDialog : BaseDialog("@dialog") {
     val windowLayer = WidgetGroup()
     val windowManager = WindowManager(windowLayer)
     private val testWindow = createTestWindow()
+
     val view : InnerView
     val debugPanel = DebugPanel()
     val tileData = TileData()
+
+    val allWindows : List<FlowDialog>
+
+    val shownWindows: List<FlowDialog>
+        get() = allWindows.filter { it.isShownInDialog }
 
     /**the data shared by uis*/
     val data = ShareData()
 
     val switchButton: FlowButton
+
+    val functionalButtons = FunctionalButtons()
+
     
     init {
         clearChildren()
@@ -37,11 +46,13 @@ class CustomizeDialog : BaseDialog("@dialog") {
 
         buildLayers()
 
+
         shown {
             setup()
-            windowManager.openWindow(debugPanel,0.0f,0.0f)
-            windowManager.openWindow(tileData,0.0f,140f)
-            windowManager.openWindow(view, center = true)
+            shownWindows.forEach{
+                windowManager.openWindow(it)
+            }
+
         }
 
         hidden {
@@ -56,9 +67,13 @@ class CustomizeDialog : BaseDialog("@dialog") {
             it.clicked(this@CustomizeDialog::switchState)
         })
 
+        functionalButtons.add(switchButton)
 
         addCloseListener()
-        
+
+        setInitialPositions()
+
+        allWindows = listOf(view, debugPanel, tileData, functionalButtons)
     }
 
     fun setup(){
@@ -105,6 +120,12 @@ class CustomizeDialog : BaseDialog("@dialog") {
         view.setViewOf(tiles)
         super.show()
 
+    }
+
+    fun setInitialPositions(){
+        debugPanel.setInitialPosition(0f,0f)
+        tileData.setInitialPosition(0f,140f)
+        view.setInitialPosition(100f,100f)
     }
 
     class ShareData{

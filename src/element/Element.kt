@@ -26,9 +26,9 @@ class Element(
 
     companion object{
         /**最大形态数*/
-        val maxPhases = 3
+        val maxPhases = 4
         /**各形态名称*/
-        val phaseNames = arrayOf("@solid","@liquid","@gas")
+        val phaseNames = arrayOf("@vacuum","@solid","@liquid","@gas")
     }
 
 }

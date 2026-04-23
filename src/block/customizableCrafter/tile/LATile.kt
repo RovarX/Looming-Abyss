@@ -34,4 +34,11 @@ class LATile(
     fun canFlowOut():Boolean{
         return !isEdge && es.element !== Elements.vacuum
     }
+
+    fun canReact():Boolean{
+        return !isEdge && es.element !== Elements.vacuum
+    }
+    fun getNearTiles(): Array<LATile?> {
+        return tiles.getNearTiles(this)
+    }
 }

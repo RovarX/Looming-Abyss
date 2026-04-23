@@ -11,5 +11,4 @@ class Requirement {
     var checkTile : (LATile) -> Boolean = { false }
 
 
-
 }

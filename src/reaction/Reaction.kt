@@ -1,7 +1,10 @@
 package reaction
 
+import block.customizableCrafter.tile.LATile
 import element.Element
 import element.Elements
+import java.util.BitSet
+import kotlin.math.max
 
 class Reaction {
 
@@ -29,4 +32,57 @@ class Reaction {
 
     /**进行反应*/
     val doReact = DoReact()
+
+    /**反应物位图表示*/
+    val bits by lazy{
+        var b =0
+        ingredients.forEach {
+            b= max(b, it.key.id)
+        }
+        val bitSet = BitSet(b)
+        ingredients.forEach {
+            bitSet.set(it.key.id)
+        }
+        bitSet
+    }
+
+
+
+    fun basicOnTile(tile:LATile):Boolean{
+        if(tile.es.element!== base){
+            return false
+        }
+
+        val tempBits = BitSet(bits.size())
+
+        tempBits.set(tile.es.element.id)
+
+        for(nearTile in tile.getNearTiles()){
+            if(nearTile == null || nearTile.canReact()){
+                continue
+            }
+            tempBits.set(nearTile.es.element.id)
+        }
+
+        if(!tempBits.and(bits).equals(bits)){
+            return false
+        }
+
+        tempBits.clear()
+
+        if (requirement.checkTile(tile)) {
+            tempBits.set(tile.es.element.id)
+        }
+
+        for (nearTile in tile.getNearTiles()) {
+            if(nearTile == null || nearTile.canReact() || nearTile.es.element === base){
+                continue
+            }
+            if (requirement.checkTile(nearTile)) {
+                tempBits.set(nearTile.es.element.id)
+            }
+        }
+
+        return tempBits.and(bits).equals(bits)
+    }
 }

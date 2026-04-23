@@ -25,12 +25,12 @@ class FlowProcessor:Processor() {
     fun checkFlow(){
 
         for(tile in tiles.array){
-            if(tile.es.element=== Elements.vacuum||tile.acted){
+            if(!tile.canFlowOut()||tile.acted ){
                 continue
             }
             for(idx in 0..3){
                 (tiles.getTile(tile, idx) ?: continue).also{
-                    if((it.es.element !== tile.es.element && it.es.element !== Elements.vacuum)  || it.isEdge){
+                    if((it.es.element !== tile.es.element && it.es.element !== Elements.vacuum)  || it.canFlowIn()){
                         continue
                     }
                 }.flowData.apply{

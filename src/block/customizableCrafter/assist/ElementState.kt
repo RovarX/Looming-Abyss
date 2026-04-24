@@ -12,6 +12,8 @@ class ElementState {
     var heat: Double = -1.0
     var temperature: Double = -1.0
     var phase = Phase.vacuum
+    var area : ElementArea? = null
+    var isAreaEdge = false
 
     /**Base on [element], two of [mass],[heat],[temperature], fill the last one*/
     fun autoFill(){

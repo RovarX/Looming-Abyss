@@ -14,7 +14,9 @@ class ElementState {
     var phase = Phase.vacuum
     var area : ElementArea? = null
     var isAreaEdge = false
+    var changed = false
 
+    var isStoredInTileData = false
     /**Base on [element], two of [mass],[heat],[temperature], fill the last one*/
     fun autoFill(){
         if(element===Elements.vacuum){
@@ -53,19 +55,18 @@ class ElementState {
     }
 
     fun addMass(delta: Double){
-        mass += delta
-        refreshTemp()
+        addMH(delta,0.0)
     }
 
     fun addHeat(delta: Double){
-        heat += delta
-        refreshTemp()
+        addMH(0.0,delta)
     }
 
     fun addMH(deltaM: Double, deltaH: Double){
         mass += deltaM
         heat += deltaH
         refreshTemp()
+        changed = true
     }
     fun refreshTemp(){
         if(element===Elements.vacuum || mass<=0.0){

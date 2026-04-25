@@ -5,8 +5,7 @@ import arc.scene.ui.ScrollPane
 import arc.scene.ui.layout.Table
 import block.customizableCrafter.assist.ElementState
 import element.Element
-import element.Phase
-import java.util.Locale
+import utility.CT
 
 class TileData : FlowDialog("@TileData") {
 
@@ -24,8 +23,8 @@ class TileData : FlowDialog("@TileData") {
         PageDescriptor(
             "Tile",
             listOf(
-                FieldDescriptor("tile index") { tileIndex.toString() },
-                FieldDescriptor("tile pos") { "($tileX, $tileY)" },
+                FieldDescriptor("tile index") { formatNumber(tileIndex.toDouble()) },
+                FieldDescriptor("tile pos") { "(${formatNumber(tileX.toDouble())}, ${formatNumber(tileY.toDouble())})" },
                 FieldDescriptor("isEdge") { tileIsEdge.toString() },
                 FieldDescriptor("isShown") { tileIsShown.toString() },
                 FieldDescriptor("acted") { tileActed.toString() },
@@ -35,11 +34,11 @@ class TileData : FlowDialog("@TileData") {
         PageDescriptor(
             "ElementState",
             listOf(
-                FieldDescriptor("element") { "${esSnapshot.element.name} (#${esSnapshot.element.id})" },
-                FieldDescriptor("phase") { "${formatPhase(esSnapshot.phase)} (${esSnapshot.phase})" },
-                FieldDescriptor("mass") { formatValue(esSnapshot.mass) },
+                FieldDescriptor("element") { "${esSnapshot.element.name} (#${formatNumber(esSnapshot.element.id.toDouble())})" },
+                FieldDescriptor("phase") { "${formatPhase(esSnapshot.phase)} (${formatNumber(esSnapshot.phase.toDouble())})" },
+                FieldDescriptor("mass") { formatValue(esSnapshot.mass, "g") },
                 FieldDescriptor("heat") { formatValue(esSnapshot.heat) },
-                FieldDescriptor("temperature") { formatValue(esSnapshot.temperature) }
+                FieldDescriptor("temperature") { formatValue(esSnapshot.temperature, "T") }
             )
         ),
         PageDescriptor(
@@ -49,11 +48,11 @@ class TileData : FlowDialog("@TileData") {
                 FieldDescriptor("canFlowed") { flowCanFlowed.toString() },
                 FieldDescriptor("isFlowing") { flowIsFlowing.toString() },
                 FieldDescriptor("flowingTo") { formatDirs(flowTo) },
-                FieldDescriptor("flowingCount") { flowFlowingCount.toString() },
+                FieldDescriptor("flowingCount") { formatNumber(flowFlowingCount.toDouble()) },
                 FieldDescriptor("isFlowed") { flowIsFlowed.toString() },
                 FieldDescriptor("flowedFrom") { formatDirs(flowFrom) },
-                FieldDescriptor("flowedCount") { flowFlowedCount.toString() },
-                FieldDescriptor("massDelta") { formatValue(flowMassDelta) },
+                FieldDescriptor("flowedCount") { formatNumber(flowFlowedCount.toDouble()) },
+                FieldDescriptor("massDelta") { formatValue(flowMassDelta, "g") },
                 FieldDescriptor("heatDelta") { formatValue(flowHeatDelta) }
             )
         )
@@ -67,6 +66,7 @@ class TileData : FlowDialog("@TileData") {
     private var page = 0
 
     private var hasTile = false
+    private var tileTag = -1
     private var tileIndex = -1
     private var tileX = -1
     private var tileY = -1
@@ -120,19 +120,32 @@ class TileData : FlowDialog("@TileData") {
     private fun pullFromInnerView() {
         val view = dialog.view
         val tiles = view.tiles ?: run {
-            hasTile = false
-            updateText()
+            if (hasTile) {
+                hasTile = false
+                tileTag = -1
+                updateText()
+            }
             return
         }
         val tile = tiles.getTile(view.mouseOnTile)
 
         if (tile == null) {
-            hasTile = false
-            updateText()
+            if (hasTile) {
+                hasTile = false
+                tileTag = -1
+                updateText()
+            }
             return
         }
 
-        tileIndex = tile.y * tiles.totalWidth + tile.x
+        val currentTag = tile.y * tiles.totalWidth + tile.x
+        val switchedTile = currentTag != tileTag
+        val es = tile.es
+
+        if (!switchedTile && es.isStoredInTileData && !es.changed) return
+
+        tileIndex = currentTag
+        tileTag = currentTag
         tileX = tile.x
         tileY = tile.y
         tileIsEdge = tile.isEdge
@@ -140,7 +153,7 @@ class TileData : FlowDialog("@TileData") {
         tileActed = tile.acted
         floorName = tile.floor.name
 
-        esSnapshot.copyFrom(tile.es)
+        esSnapshot.copyFrom(es)
 
         val fd = tile.flowData
         flowCanFlowing = fd.canFlowing
@@ -155,6 +168,9 @@ class TileData : FlowDialog("@TileData") {
             flowTo[i] = fd.flowingTo[i]
             flowFrom[i] = fd.flowedFrom[i]
         }
+
+        es.isStoredInTileData = true
+        es.changed = false
 
         hasTile = true
         updateText()
@@ -205,9 +221,12 @@ class TileData : FlowDialog("@TileData") {
         }
     }
 
-    private fun formatValue(value: Double): String {
+    private fun formatValue(value: Double, end: String = ""): String {
         if (value < 0.0) return "N/A"
-        return String.format(Locale.PRC, "%.4f", value)
+        return CT.format(value, 6, end)
     }
 
+    private fun formatNumber(value: Double): String {
+        return CT.format(value, 6, "")
+    }
 }

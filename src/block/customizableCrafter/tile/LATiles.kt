@@ -1,6 +1,7 @@
 package block.customizableCrafter.tile
 
 import block.customizableCrafter.assist.ElementArea
+import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.dealer.Processors
 import utility.CT
 
@@ -34,8 +35,35 @@ class LATiles(
     var curAreaID = 0
 
     fun update(){
-        array.forEach { it.acted = false }
+        array.forEach {
+            it.acted = false
+            it.es.changed = false
+        }
         Processors.normUpdate(this)
+    }
+
+    /**apply an element state to a tile*/
+    fun applyESTo(index:Int,es: ElementState){
+        val tile = getTile(index) ?: return
+
+        tile.es.copyFrom(es)
+
+        for(nearTile in getNearTiles(tile)){
+            if(nearTile==null){
+                continue
+            }
+            val nearArea = nearTile.es.area
+            if(nearTile.es.element === es.element && nearArea != null){
+                nearArea.addTile(tile)
+                return
+            }
+        }
+
+        createArea().also {
+            it.element = es.element
+            it.addTile(tile)
+        }
+
     }
 
     fun getTile(tile:LATile,d:Int):LATile?{
@@ -47,6 +75,14 @@ class LATiles(
             return null
         }
         return array[y*totalWidth+x]
+    }
+
+    fun getTile(index: Int,d:Int, placeHolder:Any):LATile?{
+        val tile = getTile(index)
+        if(tile==null){
+            return null
+        }
+        return getTile(tile,d)
     }
 
     /**return the tile at index*/
@@ -61,6 +97,12 @@ class LATiles(
     fun getNearTiles(tile:LATile):Array<LATile?>{
         return Array<LATile?>(4){i->
             getTile(tile,i)
+        }
+    }
+
+    fun getNearTiles(index:Int):Array<LATile?>{
+        return Array<LATile?>(4){i->
+            getTile(index,i,0)
         }
     }
 

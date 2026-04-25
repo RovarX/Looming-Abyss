@@ -189,11 +189,15 @@ class InnerView() : FlowDialog("@view"){
             this.clampOffset()
         }
         
-        if(applyOnTile){
+        if(applyOnTile&&tiles!=null){
             val debugPanel = this.dialog.debugPanel
             debugPanel.applyInputValues()
-            val tile = this.tiles?.getTile(this.mouseOnTile)
-            tile?.es?.copyFrom(debugPanel.es)
+
+
+            if (mouseOnTile >= 0 && mouseOnTile < tiles!!.array.size) {
+                tiles?.applyESTo(mouseOnTile, debugPanel.es)
+            }
+
             // Keep wheel zoom available right after applying onto a tile.
             Core.scene.setScrollFocus(this)
             applyOnTile = false

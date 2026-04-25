@@ -24,7 +24,7 @@ class ElementArea(
 
     fun addTile(tile : LATile){
         areaTiles.add(tile)
-        nearTiles.remove(tile)
+
         tile.es.area = this
         var isEdge = false
         for(nearTile in tile.getNearTiles()){
@@ -52,7 +52,13 @@ class ElementArea(
 
             //if near tile has same element, combine them
             else if(nearTile.es.element === element ){
-
+                val nearArea = nearTile.es.area
+                if(nearArea != null && nearArea !== this){
+                    linkArea(nearArea)
+                }
+                if(nearTile.es.area !== this){
+                    addTile(nearTile)
+                }
             }
 
             else{
@@ -61,12 +67,20 @@ class ElementArea(
             }
         }
         tile.es.isAreaEdge=isEdge
+
+        nearTiles.remove(tile)
     }
 
     fun removeTile(tile:LATile){
+
         areaTiles.remove(tile)
         tile.es.isAreaEdge = false
         tile.es.area = null
+
+        if(areaTiles.isEmpty()){
+            tiles.deleteArea(this)
+            return
+        }
 
         var cnt=0
         for(nearTile in tile.getNearTiles()){
@@ -104,6 +118,7 @@ class ElementArea(
     fun autoBuildArea(tile: LATile){
         areaTiles.add(tile)
         tile.es.area = this
+        element = tile.es.element
         for(nearTile in tile.getNearTiles()){
             if(nearTile==null||nearTile.es.area===this){
                 continue
@@ -118,6 +133,21 @@ class ElementArea(
     }
 
     fun breakArea(){
+        for(tile in areaTiles){
+            if(tile.es.area===this){
+                val newArea= tiles.createArea()
+                newArea.autoBuildArea(tile)
+            }
+        }
+        tiles.deleteArea(this)
+    }
 
+    fun linkArea(area:ElementArea){
+        areaTiles.addAll(area.areaTiles)
+        nearTiles.addAll(area.nearTiles)
+        for(tile in area.areaTiles){
+            tile.es.area= this
+        }
+        tiles.deleteArea(area)
     }
 }

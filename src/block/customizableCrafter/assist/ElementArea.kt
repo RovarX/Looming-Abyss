@@ -26,6 +26,7 @@ class ElementArea(
         areaTiles.add(tile)
 
         tile.es.area = this
+
         var isEdge = false
         for(nearTile in tile.getNearTiles()){
             

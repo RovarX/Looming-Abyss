@@ -38,7 +38,8 @@ class TileData : FlowDialog("@TileData") {
                 FieldDescriptor("phase") { "${formatPhase(esSnapshot.phase)} (${formatNumber(esSnapshot.phase.toDouble())})" },
                 FieldDescriptor("mass") { formatValue(esSnapshot.mass, "g") },
                 FieldDescriptor("heat") { formatValue(esSnapshot.heat) },
-                FieldDescriptor("temperature") { formatValue(esSnapshot.temperature, "T") }
+                FieldDescriptor("temperature") { formatValue(esSnapshot.temperature, "T",false) },
+                FieldDescriptor("area index") { "${esSnapshot.area?.id}" },
             )
         ),
         PageDescriptor(
@@ -153,7 +154,7 @@ class TileData : FlowDialog("@TileData") {
         tileActed = tile.acted
         floorName = tile.floor.name
 
-        esSnapshot.copyFrom(es)
+        esSnapshot.copyAllFrom(es)
 
         val fd = tile.flowData
         flowCanFlowing = fd.canFlowing
@@ -221,11 +222,14 @@ class TileData : FlowDialog("@TileData") {
         }
     }
 
-    private fun formatValue(value: Double, end: String = ""): String {
-        if (value < 0.0) return "N/A"
-        return CT.format(value, 6, end)
+    fun formatValue(value: Double, end: String = ""): String {
+        return formatValue(value, end,true)
     }
 
+    fun formatValue(value: Double, end: String = "",withUnit: Boolean = true): String {
+        if (value <= 0.0) return "N/A"
+        return CT.format(value, 6, end, withUnit)
+    }
     private fun formatNumber(value: Double): String {
         return CT.format(value, 6, "")
     }

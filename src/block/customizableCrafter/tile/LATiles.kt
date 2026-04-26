@@ -48,22 +48,25 @@ class LATiles(
 
         tile.es.copyFrom(es)
 
+        setTileToArea(tile)
+    }
+
+    fun setTileToArea(tile: LATile){
         for(nearTile in getNearTiles(tile)){
             if(nearTile==null){
                 continue
             }
             val nearArea = nearTile.es.area
-            if(nearTile.es.element === es.element && nearArea != null){
+            if(nearTile.es.element === tile.es.element && nearArea != null){
                 nearArea.addTile(tile)
                 return
             }
         }
 
         createArea().also {
-            it.element = es.element
+            it.element = tile.es.element
             it.addTile(tile)
         }
-
     }
 
     fun getTile(tile:LATile,d:Int):LATile?{
@@ -108,14 +111,13 @@ class LATiles(
 
     /**return a new element area that can be used*/
     fun createArea():ElementArea{
-        if(freeAreas.isEmpty()){
-            return ElementArea(this,curAreaID).also {
+        return if(freeAreas.isEmpty()){
+            ElementArea(this,curAreaID).also {
                 areas.add(it)
                 curAreaID ++
             }
-        }
-        else{
-            return freeAreas.removeFirst().also {
+        } else{
+            freeAreas.removeFirst().also {
                 areas.add(it)
             }
         }

@@ -30,7 +30,7 @@ class FlowProcessor:Processor() {
             }
             for(idx in 0..3){
                 (tiles.getTile(tile, idx) ?: continue).also{
-                    if((it.es.element !== tile.es.element && it.es.element !== Elements.vacuum)  || it.canFlowIn()){
+                    if((it.es.element !== tile.es.element && it.es.element !== Elements.vacuum)  || !it.canFlowIn()){
                         continue
                     }
                 }.flowData.apply{
@@ -85,11 +85,15 @@ class FlowProcessor:Processor() {
                 d++
             }
             d = min(d, 3)
-            tile.flowData.apply{
+
+            tile.apply {
+                es.phase = fromTiles[d]!!.es.phase
+            }.flowData.apply{
                 isFlowed = true
                 flowedFrom = booleanArrayOf(false, false, false, false)
                 flowedFrom[d] = true
             }
+
 
             tile.es.element = fromTiles[d]!!.es.element
 
@@ -146,10 +150,10 @@ class FlowProcessor:Processor() {
 
     fun updateResult(){
         for(tile in tiles.array){
-            if(!(tile.flowData.isFlowing || tile.flowData.isFlowed)){
-                continue
-            }
             tile.es.addMH(tile.flowData.massDelta, tile.flowData.heatDelta)
+            if(tile.es.element!== Elements.vacuum && tile.es.area==null){
+                tiles.setTileToArea(tile)
+            }
         }
     }
 }

@@ -8,9 +8,9 @@ import element.Phase
 /**pack class*/
 class ElementState {
     var element: Element = Elements.vacuum
-    var mass: Double = -1.0
-    var heat: Double = -1.0
-    var temperature: Double = -1.0
+    var mass: Double = 0.0
+    var heat: Double = 0.0
+    var temperature: Double = 0.0
     var phase = Phase.vacuum
     var area : ElementArea? = null
     var isAreaEdge = false
@@ -38,6 +38,7 @@ class ElementState {
         phase = Phase.liquid
     }
 
+    /**copy base information*/
     fun copyFrom(es: ElementState) {
         element = es.element
         mass = es.mass
@@ -46,11 +47,19 @@ class ElementState {
         phase = es.phase
     }
 
+    /**copy all information*/
+    fun copyAllFrom(es:ElementState){
+        copyFrom(es)
+        area = es.area
+        isAreaEdge = es.isAreaEdge
+        changed = es.changed
+    }
+
     fun toNull(){
         element = Elements.vacuum
-        mass = -1.0
-        heat = -1.0
-        temperature = -1.0
+        mass = 0.0
+        heat = 0.0
+        temperature = 0.0
         phase = Phase.vacuum
     }
 
@@ -68,12 +77,12 @@ class ElementState {
         refreshTemp()
         changed = true
     }
+
     fun refreshTemp(){
-        if(element===Elements.vacuum || mass<=0.0){
-            temperature = -1.0
-        }
-        else{
-            temperature = heat / mass / element.heatCapacity
+        temperature = if(element===Elements.vacuum || mass<=0.0){
+            0.0
+        } else{
+            heat / mass / element.heatCapacity
         }
     }
 

@@ -32,13 +32,24 @@ object CT {
     }
 
     fun format(d:Double, digit:Int, end:String):String{
+        return format(d,digit,end,false)
+
+    }
+
+    fun format(d:Double, digit:Int, end:String, withUnit :Boolean = false):String{
         require(digit > 0) { "digit must be greater than 0" }
 
         val negative = d < 0
 
         if (d.isNaN() || d.isInfinite()) return "$d$end"
 
-        val (scaled, unit) = scaleByUnit(d)
+        val (scaled, unit) = if(withUnit){
+            scaleByUnit(d)
+        }
+        else{
+            Pair(d,"")
+        }
+
         val number = toPlainSignificant(scaled, digit)
         return buildString {
             if(negative){
@@ -49,7 +60,6 @@ object CT {
             append(end)
         }
     }
-
     fun scaleByUnit(value: Double): Pair<Double, String> {
 
         val absValue = abs(value)

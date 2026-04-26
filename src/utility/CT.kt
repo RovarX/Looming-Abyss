@@ -14,6 +14,8 @@ object CT {
 
     val developeMode = true
 
+    val version = "1.001"
+
     /**direction array*/
     val dir = arrayOf(
         intArrayOf(0,1),

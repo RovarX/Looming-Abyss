@@ -3,6 +3,18 @@ apply plugin: 'kotlin'
 
 version '1.0'
 
+def ctVersion = null
+try{
+    def ctFile = file("src/utility/CT.kt")
+    if(ctFile.exists()){
+        def m = (ctFile.getText("UTF-8") =~ /val\s+version\s*=\s*"([^"]+)"/)
+        if(m.find()) ctVersion = m.group(1)
+    }
+}catch(Exception ignored){
+}
+def resolvedVersion = ctVersion ?: project.version.toString()
+def artifactBaseName = "looming-abyss-${resolvedVersion}"
+
 sourceSets.main.java.srcDirs = ["src"]
 
 repositories{
@@ -68,13 +80,13 @@ task jarAndroid{
         def d8 = isWindows ? "d8.bat" : "d8"
 
         //dex and desugar files - this requires d8 in your PATH
-        "$d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
+        "$d8 $dependencies --min-api 14 --output ${artifactBaseName}-Android.jar ${artifactBaseName}-Desktop.jar"
             .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
     }
 }
 
 jar{
-    archiveFileName = "${base.archivesBaseName}Desktop.jar"
+    archiveFileName = "${artifactBaseName}-Desktop.jar"
 
     from{
         configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
@@ -92,14 +104,14 @@ jar{
 task deploy(type: Jar){
     dependsOn jarAndroid
     dependsOn jar
-    archiveFileName = "${base.archivesBaseName}.jar"
+    archiveFileName = "${artifactBaseName}.jar"
 
-    from{ [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar"), zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")] }
+    from{ [zipTree("$buildDir/libs/${artifactBaseName}-Desktop.jar"), zipTree("$buildDir/libs/${artifactBaseName}-Android.jar")] }
 
     doLast{
         delete{
-            delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar"
-            delete "$buildDir/libs/${project.archivesBaseName}Android.jar"
+            delete "$buildDir/libs/${artifactBaseName}-Desktop.jar"
+            delete "$buildDir/libs/${artifactBaseName}-Android.jar"
         }
     }
 }

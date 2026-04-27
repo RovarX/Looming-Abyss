@@ -15,19 +15,22 @@ class TilesQueryDialog : FlowDialog("Tiles Query") {
 
     private val resultLabel: Label
     private val inputField: TextField
+    val inputTable:Table
     private val resultPane: ScrollPane
     private val history = ArrayDeque<Pair<String, String>>()
     private val historyText = StringBuilder()
 
     init {
-        cont.clear()
-        cont.defaults().left().pad(4f)
+        clearChildren()
+        add(titleTable).row()
+
+        defaults().left().pad(4f)
 
         resultLabel = Label("")
         resultLabel.setWrap(true)
 
         val resultTable = Table().apply {
-            add(resultLabel).width(320f).left().top().growY()
+            add(resultLabel).width(400f).left().top().growY()
         }
         resultPane = ScrollPane(resultTable)
         resultPane.setScrollingDisabled(true, false)
@@ -37,16 +40,20 @@ class TilesQueryDialog : FlowDialog("Tiles Query") {
             }
         })
 
-        cont.add(resultPane).height(140f).growX().left().top().row()
+        add(resultPane).height(140f).growX().left().top().row()
 
-        inputField = cont.field("") { _ -> }
-            .width(260f)
-            .left()
-            .get()
 
         val submit = TextButton("提交", Styles.defaultt)
         submit.clicked { submitQuery() }
-        cont.add(submit).width(72f).height(42f).left()
+
+        inputTable=Table().apply{
+            inputField =field("") { _ -> }
+                .width(300f)
+                .left()
+                .get()
+            add(submit).width(72f).height(42f).left()
+        }
+        add(inputTable).growX()
     }
 
     fun submitQuery() {
@@ -54,6 +61,7 @@ class TilesQueryDialog : FlowDialog("Tiles Query") {
         val value = TilesExpressionEvaluator.eval(expression, dialog.view.tiles)
 
         history.addLast(expression to value)
+
         historyText.append(expression).append('\n')
         historyText.append(value).append("\n\n")
 
@@ -88,9 +96,16 @@ class TilesQueryDialog : FlowDialog("Tiles Query") {
 
         if (text == "tiles") return "tiles"
 
+        if (text.firstOrNull()?.isDigit() == true) {
+            val indexPart = text.takeWhile { it.isDigit() }
+            val tailPart = text.removePrefix(indexPart)
+            text = "array[$indexPart]$tailPart"
+        }
+
         if (text.startsWith('.')) {
             text = text.removePrefix(".")
         }
+
 
         return if (text.isEmpty()) "tiles" else "tiles.$text"
     }

@@ -10,11 +10,12 @@ import kotlin.math.log10
 
 /**an object contains some constant for this mod*/
 object CT {
+
     val modName = "looming-abyss"
 
     val developeMode = true
 
-    val version = "1.001"
+    val version = "1.002"
 
     /**direction array*/
     val dir = arrayOf(

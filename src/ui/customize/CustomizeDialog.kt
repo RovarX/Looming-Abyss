@@ -23,6 +23,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
     val view : InnerView
     val debugPanel = DebugPanel()
     val tileData = TileData()
+    val tilesQueryDialog = TilesQueryDialog()
 
     val allWindows : List<FlowDialog>
 
@@ -32,11 +33,12 @@ class CustomizeDialog : BaseDialog("@dialog") {
     /**the data shared by uis*/
     val data = ShareData()
 
-    val switchButton: FlowButton
+    val switchButton: TextButton
 
     val functionalButtons = FunctionalButtons()
 
-    
+
+
     init {
         clearChildren()
         setFillParent(true)
@@ -61,22 +63,24 @@ class CustomizeDialog : BaseDialog("@dialog") {
 
         view = InnerView()
 
-        switchButton = FlowButton(TextButton("@switchState",Styles.clearTogglet).also{
+        switchButton = TextButton("@switchState",Styles.clearTogglet).also{
             it.add(Image(Icon.play)).size(Icon.play.imageSize()/Scl.scl(1f))
             it.cells.reverse()
             it.clicked(this@CustomizeDialog::switchState)
-        })
+        }
 
-        functionalButtons.add(switchButton)
+        functionalButtons.addButton(switchButton)
 
         addCloseListener()
 
         setInitialPositions()
 
-        allWindows = listOf(view, debugPanel, tileData, functionalButtons)
+        allWindows = listOf(view, debugPanel, tileData, tilesQueryDialog, functionalButtons)
     }
 
     fun setup(){
+
+        switchButton.isChecked = false
     }
 
     fun switchState(){
@@ -125,6 +129,7 @@ class CustomizeDialog : BaseDialog("@dialog") {
     fun setInitialPositions(){
         debugPanel.setInitialPosition(0f,0f)
         tileData.setInitialPosition(0f,140f)
+        tilesQueryDialog.setInitialPosition(0f,800f)
         view.setInitialPosition(100f,100f)
     }
 

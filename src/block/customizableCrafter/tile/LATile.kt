@@ -26,6 +26,12 @@ class LATile(
         es.drawElement(x,y,zoom)
     }
 
+    /**remove element in this tile*/
+    fun removeElement(){
+        es.area?.removeTile(this)
+        es.toNull()
+    }
+
     /**是否能流入液体*/
     fun canFlowIn():Boolean{
         return !isEdge

@@ -52,6 +52,11 @@ class LATiles(
     }
 
     fun setTileToArea(tile: LATile){
+
+        if(tile.es.element===tile.es.area?.element){
+            return
+        }
+
         for(nearTile in getNearTiles(tile)){
             if(nearTile==null){
                 continue

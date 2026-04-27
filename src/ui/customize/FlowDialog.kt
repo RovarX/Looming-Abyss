@@ -26,6 +26,8 @@ open class FlowDialog(title : String = "") : Dialog(title) {
     /**whether it should be packed*/
     var shouldPack = true
 
+
+
     init {
         setFillParent(false)
         setModal(false)

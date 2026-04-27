@@ -5,17 +5,21 @@ import arc.scene.ui.TextButton
 import arc.scene.ui.TextField
 import arc.scene.ui.layout.Scl
 import block.customizableCrafter.assist.ElementState
+import block.customizableCrafter.dealer.Processors
 import element.Elements
 import element.Phase
 import mindustry.gen.Icon
 import mindustry.ui.Styles
+import ui.uis
 
 class DebugPanel() : FlowDialog("@DebugPanel") {
     val elementIdField: TextField
     val massField: TextField
     val heatField: TextField
     val temperatureField: TextField
-    
+
+    val pushField:TextField
+
     val applyButton :TextButton
 
     var applying = true
@@ -51,7 +55,14 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
             .width(180f)
             .get()
         row()
-        
+
+        add("Push")
+
+        pushField = field("", { _ -> })
+            .width(180f)
+            .get()
+        row()
+
         applyButton = TextButton("@apply",Styles.clearTogglet).also{
             it.add(Image(Icon.play)).size(Icon.play.imageSize()/Scl.scl(1f))
             it.cells.reverse()
@@ -61,6 +72,10 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
         }
 
         buttons.add(applyButton)
+        buttons.button("push"){
+            pushField.text.toIntOrNull()?.let { tryPush(it) }
+        }
+
         buttons.button("@reset",this@DebugPanel::resetValues)
         add(buttons).growX().colspan(3)
 
@@ -90,6 +105,10 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
         heatField.text = "-1"
         temperatureField.text = "-1"
 
+    }
+
+    fun tryPush(index:Int){
+        uis.customize.view.tiles?.let { it.getTile(index)?.let { tile -> Processors.push.process(it,tile) } }
     }
 
     fun toElement(s: String){

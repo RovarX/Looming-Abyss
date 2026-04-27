@@ -61,6 +61,8 @@ class ElementState {
         heat = 0.0
         temperature = 0.0
         phase = Phase.vacuum
+        area=null
+        isAreaEdge = false
     }
 
     fun addMass(delta: Double){

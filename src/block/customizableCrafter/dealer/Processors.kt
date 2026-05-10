@@ -6,8 +6,10 @@ object Processors {
 
     val flow = FlowProcessor()
     val push = PushProcessor()
+    val react = ReactProcessor()
 
     val normProcessors : Array<out Processor> = arrayOf(
+        react,
         flow
     )
 

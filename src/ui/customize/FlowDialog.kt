@@ -10,10 +10,10 @@ import arc.scene.ui.Dialog
 import ui.uis
 
 open class FlowDialog(title : String = "") : Dialog(title) {
-    private var behaviorInstalled = false
-    private var movedCallback: ((Dialog) -> Unit)? = null
+    var behaviorInstalled = false
+    var movedCallback: ((Dialog) -> Unit)? = null
 
-    var isShownInDialog: Boolean = true
+    open var isShownInDialog: Boolean = true
 
     /**parent dialog*/
     val dialog by lazy{uis.customize}

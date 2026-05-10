@@ -9,6 +9,8 @@ import element.Liquids
 import mindustry.game.EventType
 import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
+import reaction.Reaction
+import reaction.Reactions
 import utility.CT
 
 class LoomingAbyss : Mod() {
@@ -33,6 +35,7 @@ class LoomingAbyss : Mod() {
     override fun loadContent() {
         Elements.load()
         Liquids.load()
+        Reactions.load()
         LABlocks.load()
     }
 }

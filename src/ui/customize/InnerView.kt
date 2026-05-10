@@ -47,6 +47,7 @@ class InnerView() : FlowDialog("@view"){
     var mousey: Float = 0f
 
     var mouseOnTile = -1
+
     var applyOnTile = false
     
     init{

@@ -11,7 +11,7 @@ object Elements {
     var Al = vacuum
     var Al_alloy = vacuum
 
-    val all = arrayOf(vacuum,H2O)
+    val all = arrayOf(vacuum,H2O,Al,Fe,Al_alloy)
 
     fun load(){
 
@@ -21,14 +21,14 @@ object Elements {
             flowability = arrayOf(0.0,0.0,0.8,1.0)
         }
 
-        Fe = Element("Fe",2).apply {
-            heatCapacity = 0.45
+        Al = Element("Al",2).apply {
+            heatCapacity = 0.9
             minMass = 0.01
             flowability = arrayOf(0.0,0.5,0.7,1.0)
         }
 
-        Al = Element("Al",3).apply {
-            heatCapacity = 0.9
+        Fe = Element("Fe",3).apply {
+            heatCapacity = 0.45
             minMass = 0.01
             flowability = arrayOf(0.0,0.5,0.7,1.0)
         }

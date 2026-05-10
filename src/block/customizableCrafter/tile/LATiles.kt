@@ -3,6 +3,8 @@ package block.customizableCrafter.tile
 import block.customizableCrafter.assist.ElementArea
 import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.dealer.Processors
+import element.Elements
+import element.Phase
 import utility.CT
 
 class LATiles(
@@ -34,7 +36,12 @@ class LATiles(
     /**current max area id -1*/
     var curAreaID = 0
 
+    var firstUpdate = true
     fun update(){
+        if(firstUpdate){
+            onFirstUpdate()
+            firstUpdate=false
+        }
         array.forEach {
             it.acted = false
             it.es.changed = false
@@ -42,6 +49,22 @@ class LATiles(
         Processors.normUpdate(this)
     }
 
+    fun onFirstUpdate(){
+        array[25].es.apply{
+            phase = Phase.liquid
+            element = Elements.Fe
+            mass = 10.0
+            heat = 100.0
+            refreshTemp()
+        }
+        array[26].es.apply{
+            phase = Phase.liquid
+            element = Elements.Al
+            mass = 10.0
+            heat = 100.0
+            refreshTemp()
+        }
+    }
     /**apply an element state to a tile*/
     fun applyESTo(index:Int,es: ElementState){
         val tile = getTile(index) ?: return

@@ -1,17 +1,19 @@
 package utility
 
-/**
- * Stores release history for the mod.
- * Keep newest entry at the top.
- */
-data class VersionInfo(
-    val version: String,
-    val description: String,
-    val additions: List<String>
-)
+
 
 object VersionHistory {
     val entries: List<VersionInfo> = listOf(
+        VersionInfo(
+            version = "1.002",
+            description = "Added reaction-related behavior to the customizable crafter simulation, enabling tile-based reaction checks and execution.",
+            additions = listOf(
+                "Added reaction data structures and rule hooks for ingredient ratios, tile requirements, and product generation.",
+                "Implemented reaction scanning logic across neighboring tiles, including base-element matching and ingredient availability checks.",
+                "Integrated reaction execution into the tile processing pipeline so qualifying tiles can trigger reactions during normal updates.",
+                "Added a sample reaction definition and lookup tables for base-element and product-element indexing."
+            )
+        ),
         VersionInfo(
             version = "1.001",
             description = "First complete gameplay prototype release with full element-flow simulation, customizable crafter workflow, and in-game debugging UI.",
@@ -40,4 +42,10 @@ object VersionHistory {
     fun find(version: String): VersionInfo? {
         return entries.firstOrNull { it.version == version }
     }
+
+    data class VersionInfo(
+        val version: String,
+        val description: String,
+        val additions: List<String>
+    )
 }

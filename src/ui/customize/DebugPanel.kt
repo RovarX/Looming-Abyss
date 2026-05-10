@@ -6,6 +6,7 @@ import arc.scene.ui.TextField
 import arc.scene.ui.layout.Scl
 import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.dealer.Processors
+import element.Element
 import element.Elements
 import element.Phase
 import mindustry.gen.Icon
@@ -67,11 +68,12 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
             it.add(Image(Icon.play)).size(Icon.play.imageSize()/Scl.scl(1f))
             it.cells.reverse()
             it.clicked({
-                //applying=!applying
+                applying=!applying
             })
         }
 
         buttons.add(applyButton)
+
         buttons.button("push"){
             pushField.text.toIntOrNull()?.let { tryPush(it) }
         }
@@ -82,25 +84,20 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
 
     }
 
+
     /**called when inner view want an es*/
     fun applyInputValues(){
-        toElement(elementIdField.text)
-        es.mass = massField.text.trim().toDoubleOrNull()?:-1.0
-        es.heat = heatField.text.trim().toDoubleOrNull()?:-1.0
-        es.temperature = temperatureField.text.trim().toDoubleOrNull()?:-1.0
-        es.autoFill()
-
         es.apply{
-            element = Elements.H2O
-            mass  = 1.0
-            heat = 1.0
-            temperature = 1.0
-            phase = Phase.liquid
+            element = toElement(elementIdField.text)
+            mass = massField.text.trim().toDoubleOrNull()?:0.0
+            heat = heatField.text.trim().toDoubleOrNull()?:0.0
+            temperature = temperatureField.text.trim().toDoubleOrNull()?:0.0
+            autoFill()
         }
     }
 
     fun resetValues(){
-        elementIdField.text = ""
+        elementIdField.text = "0"
         massField.text = "-1"
         heatField.text = "-1"
         temperatureField.text = "-1"
@@ -111,20 +108,18 @@ class DebugPanel() : FlowDialog("@DebugPanel") {
         uis.customize.view.tiles?.let { it.getTile(index)?.let { tile -> Processors.push.process(it,tile) } }
     }
 
-    fun toElement(s: String){
-        es.element = Elements.vacuum
+    fun toElement(s: String): Element{
         val id = s.trim().toIntOrNull()
         if(id!=null&&id>=0&&id<Elements.all.size){
-            es.element= Elements.all[id]
-            return
+            return Elements.all[id]
         }
         else{
             for(e in Elements.all){
                 if(e.name.equals(s.trim())){
-                    es.element=e
-                    break
+                    return e
                 }
             }
         }
+        return Elements.vacuum
     }
 }

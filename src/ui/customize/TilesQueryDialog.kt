@@ -10,15 +10,17 @@ import arc.scene.ui.TextButton
 import arc.scene.ui.TextField
 import arc.scene.ui.layout.Table
 import mindustry.ui.Styles
+import utility.CT
 
 class TilesQueryDialog : FlowDialog("Tiles Query") {
 
-    private val resultLabel: Label
-    private val inputField: TextField
+    val resultLabel: Label
+    val inputField: TextField
     val inputTable:Table
-    private val resultPane: ScrollPane
-    private val history = ArrayDeque<Pair<String, String>>()
-    private val historyText = StringBuilder()
+    val resultPane: ScrollPane
+    val history = ArrayDeque<Pair<String, String>>()
+    val historyText = StringBuilder()
+
 
     init {
         clearChildren()
@@ -85,7 +87,7 @@ class TilesQueryDialog : FlowDialog("Tiles Query") {
         inputField.text = ""
     }
 
-    private fun normalizeExpression(raw: String): String {
+    fun normalizeExpression(raw: String): String {
 
         var text = raw.trim()
         if (text.isEmpty()) return "tiles"

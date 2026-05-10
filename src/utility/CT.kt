@@ -85,4 +85,5 @@ object CT {
         val rounded = BigDecimal.valueOf(value).setScale(scale, RoundingMode.HALF_UP)
         return rounded.stripTrailingZeros().toPlainString()
     }
+
 }

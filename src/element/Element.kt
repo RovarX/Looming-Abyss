@@ -21,6 +21,8 @@ class Element(
     /**最小允许质量*/
     var minMass: Double = 0.0
 
+    var heatConductivity: Array<Double> = emptyArray()
+
     var flowability : Array<Double> = emptyArray()
 
     val drawRegion by lazy {Array<TextureRegion>(maxPhases){i-> CT.getRegion("$name-$i")}}

@@ -6,6 +6,7 @@ import element.Phase
 import kotlin.math.abs
 import kotlin.math.min
 
+/**Process flowable elements and convection*/
 class FlowProcessor:Processor() {
 
     override fun process(tiles: LATiles) {

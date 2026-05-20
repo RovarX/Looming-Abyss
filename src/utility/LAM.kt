@@ -1,0 +1,6 @@
+package utility
+
+object LAM {
+
+
+}

@@ -17,6 +17,14 @@ object CT {
 
     val version = "1.002"
 
+    fun about(): String {
+        return if(developeMode){
+            "$modName v$version-dev"
+        } else {
+            "$modName v$version"
+        }
+    }
+
     /**direction array*/
     val dir = arrayOf(
         intArrayOf(0,1),

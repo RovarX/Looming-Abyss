@@ -3,6 +3,7 @@ package block.customizableCrafter.tile
 import block.LABlocks
 import block.customizableCrafter.assist.ElementState
 import block.customizableCrafter.assist.FlowData
+import block.customizableCrafter.component.Component.ComponentBuild
 import element.Elements
 
 class LATile(
@@ -16,6 +17,7 @@ class LATile(
     var isEdge = false
     var isShown = true
     var acted = false
+    var componentBuild: ComponentBuild? = null
 
     var floor = LABlocks.crafterFloor
 

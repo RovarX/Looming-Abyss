@@ -11,6 +11,7 @@ import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
 import reaction.Reaction
 import reaction.Reactions
+import statusEffect.LASE
 import utility.CT
 
 class LoomingAbyss : Mod() {
@@ -36,6 +37,7 @@ class LoomingAbyss : Mod() {
         Elements.load()
         Liquids.load()
         Reactions.load()
+        LASE.load()
         LABlocks.load()
     }
 }

@@ -15,6 +15,7 @@ class Element(
     var phaseDownTemp : Array<Double> = emptyArray()
     /**各相对应的形态*/
     var phaseTypes: Array<PhaseType?> = arrayOfNulls(maxPhases)
+
     /**比热容*/
     var heatCapacity: Double = 0.0
     /**最小允许质量*/

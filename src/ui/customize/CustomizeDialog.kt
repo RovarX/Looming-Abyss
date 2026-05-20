@@ -13,6 +13,7 @@ import mindustry.core.GameState
 import mindustry.gen.Icon
 import mindustry.ui.Styles
 import mindustry.ui.dialogs.BaseDialog
+import statusEffect.LASE
 
 class CustomizeDialog : BaseDialog("@dialog") {
 
@@ -54,10 +55,11 @@ class CustomizeDialog : BaseDialog("@dialog") {
             shownWindows.forEach{
                 windowManager.openWindow(it)
             }
-
+            Vars.player?.unit()?.apply(LASE.whenEdit, Float.MAX_VALUE)
         }
 
         hidden {
+            Vars.player?.unit()?.unapply(LASE.whenEdit)
             windowManager.closeAllWindows()
         }
 

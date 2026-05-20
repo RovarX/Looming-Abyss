@@ -33,7 +33,7 @@ object Elements {
             flowability = arrayOf(0.0,0.5,0.7,1.0)
         }
 
-        Al_alloy = Element("Al_alloy",4).apply {
+        Al_alloy = Element("Al-alloy",4).apply {
             heatCapacity = 0.8
             minMass = 0.01
             flowability = arrayOf(0.0,0.5,0.7,1.0)
